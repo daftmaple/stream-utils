@@ -101,4 +101,12 @@ export class TwitchChat {
   public registerClearChatHandler(handler: TmiHandlerType<TmiClearChat>) {
     this.clearChatHandler = handler;
   }
+
+  public deregisterHandler() {
+    this.messageHandler = undefined;
+    this.timeoutHandler = undefined;
+    this.banHandler = undefined;
+    this.messageDeletedHandler = undefined;
+    this.clearChatHandler = undefined;
+  }
 }

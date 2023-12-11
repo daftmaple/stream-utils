@@ -35,6 +35,7 @@ export function Chatbox() {
     client.registerMessageHandler(messageHandler);
 
     return () => {
+      client.deregisterHandler();
       client.disconnect();
     };
   }, [channel, messageHandler]);
