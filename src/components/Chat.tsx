@@ -1,4 +1,5 @@
-import React from "react";
+import clsx from "clsx";
+import React, { useEffect, useState } from "react";
 import { ChatUserstate } from "tmi.js";
 
 interface ChatProps {
@@ -7,6 +8,15 @@ interface ChatProps {
 }
 
 export function Chat({ userstate, message }: ChatProps) {
+  const [slideOut, setSlideOut] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSlideOut(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const renderMessage = () => {
     const finalString = message.split(" ");
 
@@ -40,8 +50,16 @@ export function Chat({ userstate, message }: ChatProps) {
     return finalMessage;
   };
 
+  const baseClasses =
+    "border-0 border-solid bg-gray-400/25 rounded border-teal-400 p-2";
+
+  const combinedClasses = clsx(baseClasses, {
+    "animate-slideIn": !slideOut,
+    "animate-slideOut": slideOut,
+  });
+
   return (
-    <div className="border-0 border-solid bg-gray-400/25 rounded border-teal-400 p-2">
+    <div className={combinedClasses}>
       <b>{userstate["display-name"]}</b>: {renderMessage()}
     </div>
   );
