@@ -28,9 +28,9 @@ export function Chat({ userstate, message }: ChatProps) {
       if (emotes[text]) {
         const emoteUrl = `https://static-cdn.jtvnw.net/emoticons/v1/${emotes[text]}/1.0`;
         return (
-          <>
-            <img className="inline" src={emoteUrl} alt={text} key={index} />{" "}
-          </>
+          <React.Fragment key={index}>
+            <img className="inline" src={emoteUrl} alt={text} />{" "}
+          </React.Fragment>
         );
       }
 
