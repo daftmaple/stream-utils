@@ -6,7 +6,7 @@ interface UseQueueProps<T> {
 }
 
 export function useQueue<T>(props?: UseQueueProps<T>) {
-  const { initialData = [], maxSize = 100 } = props ?? {};
+  const { initialData = [], maxSize = 20 } = props ?? {};
 
   const [queue, setQueue] = useState<T[]>(initialData);
 

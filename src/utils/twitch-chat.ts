@@ -1,23 +1,8 @@
-import { Client } from "tmi.js";
+import { Client, Events } from "tmi.js";
 
-import {
-  TmiMessageDeleted,
-  TmiMessage,
-  TmiBan,
-  TmiTimeout,
-  TmiClearChat,
-  Transformable,
-} from "./types";
-
-/**
- * Transformable<RT> can return either RT or null (in case of failed transform).
- * Hence, TransformReturnType should use ReturnType of the transform method.
- */
-type TmiTransformReturnType<T> = T extends Transformable<infer RT>
-  ? ReturnType<Transformable<RT>["transform"]>
-  : never;
-
-type TmiHandlerType<T> = (args: TmiTransformReturnType<T>) => void;
+export type TmiHandlerType<T extends keyof Events> = (
+  ...args: Parameters<Events[T]>
+) => void;
 
 /**
  * Twitch Chat client
@@ -27,40 +12,32 @@ type TmiHandlerType<T> = (args: TmiTransformReturnType<T>) => void;
 export class TwitchChat {
   private client: Client;
 
-  private messageHandler?: TmiHandlerType<TmiMessage>;
+  private messageHandler?: TmiHandlerType<"message">;
 
-  private timeoutHandler?: TmiHandlerType<TmiTimeout>;
+  private timeoutHandler?: TmiHandlerType<"timeout">;
 
-  private banHandler?: TmiHandlerType<TmiBan>;
+  private banHandler?: TmiHandlerType<"ban">;
 
-  private messageDeletedHandler?: TmiHandlerType<TmiMessageDeleted>;
+  private messageDeletedHandler?: TmiHandlerType<"messagedeleted">;
 
-  private clearChatHandler?: TmiHandlerType<TmiClearChat>;
+  private clearChatHandler?: TmiHandlerType<"clearchat">;
 
   constructor(private channel: string) {
     this.client = new Client({
       channels: [this.channel],
     });
 
-    this.client.on(`message`, (...args) =>
-      this.messageHandler?.(new TmiMessage(...args).transform())
-    );
+    this.client.on(`message`, (...args) => this.messageHandler?.(...args));
 
-    this.client.on(`timeout`, (...args) =>
-      this.timeoutHandler?.(new TmiTimeout(...args).transform())
-    );
+    this.client.on(`timeout`, (...args) => this.timeoutHandler?.(...args));
 
-    this.client.on(`ban`, (...args) =>
-      this.banHandler?.(new TmiBan(...args).transform())
-    );
+    this.client.on(`ban`, (...args) => this.banHandler?.(...args));
 
     this.client.on(`messagedeleted`, (...args) =>
-      this.messageDeletedHandler?.(new TmiMessageDeleted(...args).transform())
+      this.messageDeletedHandler?.(...args)
     );
 
-    this.client.on(`clearchat`, (arg) =>
-      this.clearChatHandler?.(new TmiClearChat(arg))
-    );
+    this.client.on(`clearchat`, (...args) => this.clearChatHandler?.(...args));
   }
 
   public connect() {
@@ -74,35 +51,36 @@ export class TwitchChat {
   }
 
   public disconnect() {
+    this.deregisterHandler();
     this.client
       .disconnect()
       .then(() => console.log(`Chat client`, `Disconnected`))
       .catch(console.error);
   }
 
-  public registerMessageHandler(handler: TmiHandlerType<TmiMessage>) {
+  public registerMessageHandler(handler: TmiHandlerType<"message">) {
     this.messageHandler = handler;
   }
 
-  public registerTimeoutHandler(handler: TmiHandlerType<TmiTimeout>) {
+  public registerTimeoutHandler(handler: TmiHandlerType<"timeout">) {
     this.timeoutHandler = handler;
   }
 
-  public registerBanHandler(handler: TmiHandlerType<TmiBan>) {
+  public registerBanHandler(handler: TmiHandlerType<"ban">) {
     this.banHandler = handler;
   }
 
   public registerMessageDeletedHandler(
-    handler: TmiHandlerType<TmiMessageDeleted>
+    handler: TmiHandlerType<"messagedeleted">
   ) {
     this.messageDeletedHandler = handler;
   }
 
-  public registerClearChatHandler(handler: TmiHandlerType<TmiClearChat>) {
+  public registerClearChatHandler(handler: TmiHandlerType<"clearchat">) {
     this.clearChatHandler = handler;
   }
 
-  public deregisterHandler() {
+  private deregisterHandler() {
     this.messageHandler = undefined;
     this.timeoutHandler = undefined;
     this.banHandler = undefined;
