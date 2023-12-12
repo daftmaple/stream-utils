@@ -3,7 +3,8 @@ import { ChatUserstate } from "tmi.js";
 import { TmiHandlerType, TwitchChat } from "../utils/twitch-chat";
 import { useQueue } from "../utils/hooks";
 import { Chat } from "../components/Chat";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
+import clsx from "clsx";
 
 type ChatData = {
   message: string;
@@ -13,6 +14,7 @@ type ChatData = {
 
 export function Chatbox() {
   const { channel = "twitch" } = useParams();
+  const [searchParams] = useSearchParams();
 
   const { add, queue } = useQueue<ChatData>();
 
@@ -38,8 +40,18 @@ export function Chatbox() {
     };
   }, [channel, messageHandler]);
 
+  const baseClasses = "w-[32rem] absolute bottom-3 flex flex-col gap-2";
+
+  const combinedClasses = clsx(baseClasses, {
+    ...{ "right-3": true },
+    ...(searchParams.get("align") && {
+      "right-3": searchParams.get("align") === "right",
+      "left-3": searchParams.get("align") === "left",
+    }),
+  });
+
   return (
-    <div className="w-[32rem] absolute bottom-3 left-3 flex flex-col gap-2">
+    <div className={combinedClasses}>
       {queue.map((item) => (
         <Chat
           userstate={item.userstate}
