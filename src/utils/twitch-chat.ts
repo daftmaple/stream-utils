@@ -43,7 +43,9 @@ export class TwitchChat {
   public connect() {
     this.client
       .connect()
-      .then(() => console.log(`Chat client`, `Connected`))
+      .then(() => {
+        console.log(`Chat client`, `Connected`);
+      })
       .catch(console.error);
     this.client.on(`join`, (channel) => {
       console.log(`Joined channel ${channel}`);
@@ -54,7 +56,9 @@ export class TwitchChat {
     this.deregisterHandler();
     this.client
       .disconnect()
-      .then(() => console.log(`Chat client`, `Disconnected`))
+      .then(() => {
+        console.log(`Chat client`, `Disconnected`);
+      })
       .catch(console.error);
   }
 

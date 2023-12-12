@@ -14,7 +14,9 @@ export function Chat({ userstate, message }: ChatProps) {
     const timer = setTimeout(() => {
       setSlideOut(true);
     }, 5000);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   const renderMessage = () => {

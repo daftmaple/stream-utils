@@ -6,11 +6,11 @@ import { Chat } from "../components/Chat";
 import { useParams, useSearchParams } from "react-router-dom";
 import clsx from "clsx";
 
-type ChatData = {
+interface ChatData {
   message: string;
   userstate: ChatUserstate;
   timestamp: number;
-};
+}
 
 export function Chatbox() {
   const { channel = "twitch" } = useParams();
