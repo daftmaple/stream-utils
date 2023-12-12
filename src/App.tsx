@@ -9,14 +9,14 @@ function App() {
   return (
     <div className="max-w-[80rem] mx-auto my-0 text-center">
       <div className="flex flex-nowrap justify-center">
-        <a href="https://vitejs.dev" target="_blank">
+        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img
             src={viteLogo}
             className="h-[6em] p-[1.5em] logo"
             alt="Vite logo"
           />
         </a>
-        <a href="https://react.dev" target="_blank">
+        <a href="https://react.dev" target="_blank" rel="noreferrer">
           <img
             src={reactLogo}
             className="h-[6em] p-[1.5em] logo react"
@@ -26,7 +26,11 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="p-[2em]">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button
+          onClick={() => {
+            setCount((count) => count + 1);
+          }}
+        >
           count is {count}
         </button>
         <p>
