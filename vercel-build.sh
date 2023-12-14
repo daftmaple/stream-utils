@@ -10,5 +10,5 @@ if [[ "$VERCEL_GIT_COMMIT_REF" == "master" ]] ; then
 else
   # Don't build
   echo "🛑 - Build cancelled"
-  exit 1;
+  exit 0;
 fi

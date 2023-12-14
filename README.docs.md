@@ -34,3 +34,17 @@ export default {
 Builds are ignored unless master branch based on the configuration on `vercel-build.sh`. If you are running this on your own, make sure `Ignored Build Step` is configured (under `Git`):
 
 ![Ignored build step](./docs/ignore.PNG)
+
+`react-router` doesn't work well with rewrites, hence the config below is added on `vercel.json`
+
+```json
+{
+  "routes": [
+    {
+      "src": "/[^.]+",
+      "dest": "/",
+      "status": 200
+    }
+  ]
+}
+```
