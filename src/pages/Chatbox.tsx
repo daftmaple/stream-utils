@@ -56,6 +56,7 @@ export function Chatbox() {
         <Chat
           userstate={item.userstate}
           message={item.message}
+          slideOutDelay={Number(searchParams.get("slideOutDelay")) || 5}
           key={`${item.userstate["user-id"]}-${item.timestamp.toString()}`}
         />
       ))}

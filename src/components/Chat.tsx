@@ -5,19 +5,21 @@ import { ChatUserstate } from "tmi.js";
 interface ChatProps {
   userstate: ChatUserstate;
   message: string;
+  // Delay hiding in seconds
+  slideOutDelay?: number;
 }
 
-export function Chat({ userstate, message }: ChatProps) {
+export function Chat({ userstate, message, slideOutDelay = 5 }: ChatProps) {
   const [slideOut, setSlideOut] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setSlideOut(true);
-    }, 5000);
+    }, slideOutDelay * 1000);
     return () => {
       clearTimeout(timer);
     };
-  }, []);
+  }, [slideOutDelay]);
 
   const renderMessage = () => {
     const finalString = message.split(" ");
@@ -53,7 +55,7 @@ export function Chat({ userstate, message }: ChatProps) {
   };
 
   const baseClasses =
-    "border-0 border-solid bg-gray-400/25 rounded border-teal-400 p-2";
+    "border-0 border-solid bg-gray-500/75 rounded border-teal-400 p-2 text-slate-100";
 
   const combinedClasses = clsx(baseClasses, {
     "animate-slideIn": !slideOut,
