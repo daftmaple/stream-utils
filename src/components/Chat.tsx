@@ -53,7 +53,7 @@ export function Chat({ userstate, message }: ChatProps) {
   };
 
   const baseClasses =
-    "border-0 border-solid bg-gray-400/25 rounded border-teal-400 p-2";
+    "border-0 border-solid bg-gray-500/75 rounded border-teal-400 p-2 text-slate-100";
 
   const combinedClasses = clsx(baseClasses, {
     "animate-slideIn": !slideOut,
