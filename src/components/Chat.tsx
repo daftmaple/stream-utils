@@ -36,8 +36,6 @@ export function Chat({ userstate, message, slideOutDelay = 5 }: ChatProps) {
       })
     );
 
-    console.log(emotes);
-
     const finalMessage = finalString.map((text, index) => {
       if (emotes[text]) {
         const emoteUrl = `https://static-cdn.jtvnw.net/emoticons/v1/${emotes[text]}/1.0`;
