@@ -20,6 +20,7 @@ export function Lastfm() {
       ).then((res) => res.json() as Promise<LastFmResponse>),
     enabled: LASTFM_API_KEY.length > 0,
     refetchInterval: 5 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   if (data) {
@@ -35,13 +36,12 @@ export function Lastfm() {
           alt={lastTrack.name}
           className="h-32 w-32"
         />
-        <div className="flex flex-col gap-2 text-slate-100">
-          <b className="text-lg">
+        <div className="flex flex-col text-slate-100">
+          <p className="text-md mb-2">
             {isNowPlaying ? "Now Playing" : "Last Playing"}
-          </b>
-          <p className="text-xl">
-            {lastTrack.artist["#text"]} - {lastTrack.name}
           </p>
+          <p className="text-xl font-bold">{lastTrack.name}</p>
+          <p className="text-xl font-semibold">{lastTrack.artist["#text"]}</p>
         </div>
       </div>
     );
