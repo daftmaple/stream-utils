@@ -5,6 +5,7 @@ import { LastFmResponse, getImage } from "../utils/lastfm";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const LASTFM_API_KEY: string = import.meta.env.VITE_LASTFM_API_KEY ?? "";
+const LASTFM_API_URL = "https://ws.audioscrobbler.com/2.0";
 
 const widgetStyle =
   "w-[32rem] absolute top-3 left-3 rounded bg-gray-500/75 p-3";
@@ -16,7 +17,7 @@ export function Lastfm() {
     queryKey: ["lastfm"],
     queryFn: () =>
       fetch(
-        `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${username}&api_key=${LASTFM_API_KEY}&format=json&limit=2`
+        `${LASTFM_API_URL}/?method=user.getrecenttracks&user=${username}&api_key=${LASTFM_API_KEY}&format=json&limit=2`
       ).then((res) => res.json() as Promise<LastFmResponse>),
     enabled: LASTFM_API_KEY.length > 0,
     refetchInterval: 5 * 1000,
