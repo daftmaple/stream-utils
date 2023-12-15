@@ -5,19 +5,21 @@ import { ChatUserstate } from "tmi.js";
 interface ChatProps {
   userstate: ChatUserstate;
   message: string;
+  // Delay hiding in seconds
+  slideOutDelay?: number;
 }
 
-export function Chat({ userstate, message }: ChatProps) {
+export function Chat({ userstate, message, slideOutDelay = 5 }: ChatProps) {
   const [slideOut, setSlideOut] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setSlideOut(true);
-    }, 5000);
+    }, slideOutDelay * 1000);
     return () => {
       clearTimeout(timer);
     };
-  }, []);
+  }, [slideOutDelay]);
 
   const renderMessage = () => {
     const finalString = message.split(" ");
