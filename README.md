@@ -14,3 +14,13 @@ Query Params
 | ------------- | ---------- | ----------------- |
 | align         | string     | `left` or `right` |
 | slideOutDelay | number     |                   |
+
+## Lastfm
+
+Usage:
+
+```
+<BASE_URL>/lastfm/<username>
+```
+
+Note: this requires `VITE_LASTFM_API_KEY` to be set while executing `build` script

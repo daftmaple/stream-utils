@@ -16,7 +16,7 @@ export function Chatbox() {
   const { channel = "twitch" } = useParams();
   const [searchParams] = useSearchParams();
 
-  const { add, queue } = useQueue<ChatData>();
+  const { add, remove, queue } = useQueue<ChatData>();
 
   const messageHandler = useCallback<TmiHandlerType<"message">>(
     (_channel, userstate, message) => {
@@ -29,16 +29,58 @@ export function Chatbox() {
     [add]
   );
 
+  const timeoutHandler = useCallback<TmiHandlerType<"timeout">>(
+    (_channel, _username, _reason, _duration, userstate) => {
+      remove((queueData) =>
+        queueData.filter(
+          (value) => value.userstate["user-id"] !== userstate["target-user-id"]
+        )
+      );
+    },
+    [remove]
+  );
+
+  const banHandler = useCallback<TmiHandlerType<"ban">>(
+    (_channel, _username, _reason, userstate) => {
+      remove((queueData) =>
+        queueData.filter(
+          (value) => value.userstate["user-id"] !== userstate["target-user-id"]
+        )
+      );
+    },
+    [remove]
+  );
+
+  const messageDeletedHandler = useCallback<TmiHandlerType<"messagedeleted">>(
+    (_channel, _username, _reason, userstate) => {
+      remove((queueData) =>
+        queueData.filter(
+          (value) => value.userstate.id !== userstate["target-msg-id"]
+        )
+      );
+    },
+    [remove]
+  );
+
   useEffect(() => {
     const client = new TwitchChat(channel);
 
     client.connect();
     client.registerMessageHandler(messageHandler);
+    client.registerTimeoutHandler(timeoutHandler);
+    client.registerBanHandler(banHandler);
+    client.registerMessageDeletedHandler(messageDeletedHandler);
 
     return () => {
       client.disconnect();
     };
-  }, [channel, messageHandler]);
+  }, [
+    channel,
+    banHandler,
+    messageDeletedHandler,
+    messageHandler,
+    timeoutHandler,
+  ]);
 
   const baseClasses = "w-[32rem] absolute bottom-3 flex flex-col gap-2";
 
