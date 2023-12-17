@@ -5,6 +5,11 @@ interface UseQueueProps<T> {
   maxSize?: number;
 }
 
+/**
+ * Filter function, gets original array and returns the desired array
+ */
+type Filter<T> = (originalArray: T[]) => T[];
+
 export function useQueue<T>(props?: UseQueueProps<T>) {
   const { initialData = [], maxSize = 20 } = props ?? {};
 
@@ -17,15 +22,10 @@ export function useQueue<T>(props?: UseQueueProps<T>) {
     [maxSize]
   );
 
-  const remove = useCallback(() => {
-    let removedElement;
-
-    setQueue(([first, ...q]) => {
-      removedElement = first;
-      return q;
+  const remove = useCallback((callback: Filter<T>) => {
+    setQueue((elements) => {
+      return callback(elements);
     });
-
-    return removedElement;
   }, []);
 
   const clear = useCallback(() => {
